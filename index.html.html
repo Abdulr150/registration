@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Smart Student Course Registration System | University Project</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e9f0f5 0%, #d9e2ec 100%);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+        }
+
+        /* main container */
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(2px);
+            border-radius: 2.5rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.25);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        /* header */
+        .uni-header {
+            background: #0a2b3e;
+            padding: 1.4rem 2rem;
+            color: white;
+            border-bottom: 4px solid #f4c542;
+        }
+        .uni-header h1 {
+            font-size: 1.9rem;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .uni-header h1 small {
+            font-size: 0.8rem;
+            background: #1f4e6e;
+            padding: 0.3rem 0.9rem;
+            border-radius: 40px;
+            font-weight: normal;
+        }
+        .group-badge {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            opacity: 0.85;
+            font-family: monospace;
+        }
+
+        /* two column layout */
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .menu-panel {
+            flex: 1.2;
+            min-width: 260px;
+            background: #fefcf5;
+            padding: 1.8rem 1.2rem;
+            border-right: 1px solid #e2e8f0;
+        }
+        .output-panel {
+            flex: 3;
+            background: #ffffff;
+            padding: 1.8rem 2rem;
+        }
+
+        /* buttons style */
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .menu-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #0f2b3b;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid transparent;
+        }
+        .menu-btn:hover {
+            background: #e2eaf1;
+            transform: translateX(5px);
+            border-left-color: #f4c542;
+        }
+        .submenu {
+            margin-left: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+        }
+        .sub-btn {
+            background: #eef2ff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .sub-btn:hover {
+            background: #d9e2ef;
+            transform: scale(0.97);
+        }
+        .danger-btn {
+            background: #ffe6e5;
+            color: #b91c1c;
+        }
+        .card {
+            background: #fbfdff;
+            border-radius: 1.5rem;
+            padding: 1.4rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #edf2f7;
+        }
+        .report-area {
+            background: #f8fafc;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #cbd5e1;
+        }
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 15px 0;
+            align-items: center;
+        }
+        .input-group input, .input-group select {
+            padding: 10px 14px;
+            border-radius: 32px;
+            border: 1px solid #cbd5e1;
+            flex: 1;
+            min-width: 160px;
+            font-size: 0.9rem;
+        }
+        button.primary {
+            background: #0f3b4f;
+            color: white;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        hr {
+            margin: 15px 0;
+            border-color: #eef2ff;
+        }
+        h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #1e2f3a;
+            border-left: 5px solid #f4c542;
+            padding-left: 12px;
+        }
+        .status-msg {
+            background: #eef2ff;
+            padding: 10px;
+            border-radius: 20px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #eef2f5;
+            font-size: 0.75rem;
+            color: #2c5a6e;
+            border-top: 1px solid #dce5ec;
+        }
+        @media (max-width: 760px) {
+            .dashboard { flex-direction: column; }
+            .menu-panel { border-right: none; border-bottom: 1px solid #ddd; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="uni-header">
+        <h1>🎓 Smart Student Course Registration <small>Phase 1 | Data Structures Project</small></h1>
+        <div class="group-badge">👥 Omar Sherif (F2400027) | Elias Alsaie (F2400081) | Abdulrahman Bourenane (F2500347) | Mohammed Alkooheji (F2400272)</div>
+    </div>
+
+    <div class="dashboard">
+        <!-- LEFT MENU (operations) -->
+        <div class="menu-panel">
+            <div class="menu-grid">
+                <button class="menu-btn" id="helpBtn">📘 1. Help</button>
+                <button class="menu-btn" id="studentMgmtBtn">🧑‍🎓 2. Student Management</button>
+                <div id="studentSubmenu" class="submenu" style="display: none;">
+                    <button class="sub-btn" data-action="addStudent">➕ Add Student</button>
+                    <button class="sub-btn" data-action="editStudent">✏️ Edit Student</button>
+                    <button class="sub-btn danger-btn" data-action="deleteStudent">🗑️ Delete Student</button>
+                </div>
+
+                <button class="menu-btn" id="courseMgmtBtn">📚 3. Course Management</button>
+                <div id="courseSubmenu" class="submenu" style="display: none;">
+                    <button class="sub-btn" data-action="addCourse">➕ Add Course</button>
+                    <button class="sub-btn" data-action="editCourse">✏️ Edit Course</button>
+                    <button class="sub-btn danger-btn" data-action="deleteCourse">🗑️ Delete Course</button>
+                </div>
+
+                <button class="menu-btn" id="regMgmtBtn">📝 4. Registration (Register/Drop)</button>
+                <div id="regSubmenu" class="submenu" style="display: none;">
+                    <button class="sub-btn" data-action="registerCourse">✅ Register Student → Course</button>
+                    <button class="sub-btn danger-btn" data-action="dropCourse">❌ Drop Course</button>
+                </div>
+
+                <button class="menu-btn" id="searchBtn">🔍 5. Search</button>
+                <div id="searchSubmenu" class="submenu" style="display: none;">
+                    <button class="sub-btn" data-action="searchStudent">👤 Search Student by ID</button>
+                    <button class="sub-btn" data-action="searchCourse">📖 Search Course by Code</button>
+                </div>
+
+                <button class="menu-btn" id="reportsBtn">📊 6. Reports</button>
+                <button class="menu-btn" id="saveBtn">💾 7. Save Data (persist)</button>
+                <button class="menu-btn" id="quitBtn">🚪 8. Quit (Auto-save)</button>
+            </div>
+            <div class="status-msg" style="margin-top: 24px; text-align:center;">
+                💡 Arabic names & titles supported (UTF-8)<br>
+                ⚡ HashMap, ArrayList, Queue (FIFO)
+            </div>
+        </div>
+
+        <!-- RIGHT OUTPUT PANEL (dynamic) -->
+        <div class="output-panel">
+            <div id="dynamicPanel">
+                <div class="card">
+                    <h3>📌 System Ready</h3>
+                    <p>Welcome to Smart Registration System. Use left menu to manage students, courses, and registrations.<br>
+                    <strong>Data structures:</strong> HashMap (students/courses), ArrayList (enrollments), Queue (waiting lists).<br>
+                    All changes are stored in browser memory until you click "Save Data".</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>© University Project - Smart Course Registration | Supports waiting lists & auto-enrollment from queue when seat frees</footer>
+</div>
+
+<script>
+    // ======================== DATA STRUCTURES & CORE LOGIC ========================
+    // Person class (parent)
+    class Person {
+        constructor(name, nationalID) {
+            this.name = name;
+            this.nationalID = nationalID;
+        }
+        toString() { return `Name: ${this.name} | National ID: ${this.nationalID}`; }
+    }
+
+    // Student class
+    class Student extends Person {
+        constructor(name, nationalID, studentID, major) {
+            super(name, nationalID);
+            this.studentID = studentID;
+            this.major = major;
+            this.registeredCourses = [];   // ArrayList of Course objects
+        }
+        registerCourse(course) {
+            if (this.registeredCourses.some(c => c.courseCode === course.courseCode)) {
+                return { success: false, msg: "Already registered in this course." };
+            }
+            const result = course.addStudent(this);
+            if (result.success) {
+                this.registeredCourses.push(course);
+                return { success: true, msg: `✅ Registered in ${course.courseName}` };
+            } else {
+                // already added to waiting list inside course.addStudent
+                return { success: false, msg: `⏳ Course full. Added to waiting list for ${course.courseName}` };
+            }
+        }
+        dropCourse(course) {
+            const idx = this.registeredCourses.findIndex(c => c.courseCode === course.courseCode);
+            if (idx === -1) return { success: false, msg: "You are not registered in this course." };
+            this.registeredCourses.splice(idx,1);
+            const removed = course.removeStudent(this);
+            if(removed) return { success: true, msg: `❌ Dropped ${course.courseName}. A waiting student might be enrolled.` };
+            return { success: false, msg: "Error while dropping." };
+        }
+        viewRegisteredCourses() {
+            if(this.registeredCourses.length === 0) return "📭 No registered courses.";
+            let list = this.registeredCourses.map(c => `📖 ${c.courseCode} - ${c.courseName}`).join("\n");
+            return `📚 Registered courses:\n${list}`;
+        }
+        calculateTotalCredits() { return this.registeredCourses.length * 3; }
+    }
+
+    // Course class with Queue (array as queue FIFO)
+    class Course {
+        constructor(courseCode, courseName, capacity) {
+            this.courseCode = courseCode;
+            this.courseName = courseName;
+            this.capacity = capacity;
+            this.enrolledStudents = [];     // ArrayList
+            this.waitingList = [];           // FIFO queue (push/pop shift)
+        }
+        isFull() { return this.enrolledStudents.length >= this.capacity; }
+        getAvailableSeats() { return Math.max(0, this.capacity - this.enrolledStudents.length); }
+        addStudent(student) {
+            if (!this.isFull()) {
+                this.enrolledStudents.push(student);
+                return { success: true, msg: "enrolled" };
+            } else {
+                this.waitingList.push(student);
+                return { success: false, msg: "waitingList" };
+            }
+        }
+        removeStudent(student) {
+            const index = this.enrolledStudents.findIndex(s => s.studentID === student.studentID);
+            if (index !== -1) {
+                this.enrolledStudents.splice(index,1);
+                this.enrollFromWaitingList();  // critical: promote from queue
+                return true;
+            }
+            return false;
+        }
+        enrollFromWaitingList() {
+            if (this.waitingList.length > 0 && !this.isFull()) {
+                const nextStudent = this.waitingList.shift();
+                this.enrolledStudents.push(nextStudent);
+                // Also update student's registeredCourses? we'll handle separately but for consistency
+                if (!nextStudent.registeredCourses.some(c => c.courseCode === this.courseCode)) {
+                    nextStudent.registeredCourses.push(this);
+                }
+                return true;
+            }
+            return false;
+        }
+        toString() {
+            return `${this.courseCode} - ${this.courseName} | Cap:${this.capacity} | Enrolled:${this.enrolledStudents.length} | Waiting:${this.waitingList.length}`;
+        }
+    }
+
+    // Registration System Manager
+    class RegistrationSystem {
+        constructor() {
+            this.students = new Map();   // key: studentID -> Student
+            this.courses = new Map();    // key: courseCode -> Course
+        }
+        // Student Ops
+        addStudent(name, nationalID, studentID, major) {
+            if (this.students.has(studentID)) return "❌ Student ID already exists!";
+            if (!/^\d+$/.test(nationalID)) return "❌ National ID must contain only digits.";
+            const newStudent = new Student(name, nationalID, studentID, major);
+            this.students.set(studentID, newStudent);
+            return `✅ Student "${name}" added successfully.`;
+        }
+        deleteStudent(studentID) {
+            const student = this.students.get(studentID);
+            if (!student) return "❌ Student not found.";
+            // remove student from all courses
+            for (let course of this.courses.values()) {
+                const enrolledIdx = course.enrolledStudents.findIndex(s => s.studentID === studentID);
+                if (enrolledIdx !== -1) {
+                    course.enrolledStudents.splice(enrolledIdx,1);
+                    course.enrollFromWaitingList();
+                }
+                // clean waiting list
+                course.waitingList = course.waitingList.filter(s => s.studentID !== studentID);
+                // remove from student's registeredCourses also but student will be deleted anyway
+            }
+            this.students.delete(studentID);
+            return `🗑️ Student ID ${studentID} deleted.`;
+        }
+        editStudent(studentID, field, newValue) {
+            const s = this.students.get(studentID);
+            if (!s) return "Student not found.";
+            if (field === 'name') s.name = newValue;
+            else if (field === 'major') s.major = newValue;
+            else if (field === 'nationalID') { if(/^\d+$/.test(newValue)) s.nationalID = newValue; else return "Invalid national ID."; }
+            else return "Invalid field";
+            return `✏️ Student updated (${field} changed).`;
+        }
+        // Course Ops
+        addCourse(code, name, capacity) {
+            if (this.courses.has(code)) return "❌ Course code already exists!";
+            if (capacity <= 0) return "Capacity must be positive.";
+            const newCourse = new Course(code, name, capacity);
+            this.courses.set(code, newCourse);
+            return `✅ Course "${name}" (${code}) added.`;
+        }
+        deleteCourse(code) {
+            const course = this.courses.get(code);
+            if (!course) return "Course not found.";
+            // remove from each student's registeredCourses
+            for (let student of this.students.values()) {
+                student.registeredCourses = student.registeredCourses.filter(c => c.courseCode !== code);
+            }
+            this.courses.delete(code);
+            return `📕 Course ${code} deleted.`;
+        }
+        editCourse(code, field, newValue) {
+            const c = this.courses.get(code);
+            if (!c) return "Course not found.";
+            if (field === 'name') c.courseName = newValue;
+            else if (field === 'capacity') {
+                let newCap = parseInt(newValue);
+                if (isNaN(newCap) || newCap < 0) return "Invalid capacity";
+                c.capacity = newCap;
+                while (c.waitingList.length > 0 && c.enrolledStudents.length < c.capacity) {
+                    c.enrollFromWaitingList();
+                }
+                return `Capacity updated to ${newCap}. Waiting list promotions processed.`;
+            }
+            return `Course updated.`;
+        }
+        // Registration actions
+        registerStudentToCourse(studentID, courseCode) {
+            const student = this.students.get(studentID);
+            const course = this.courses.get(courseCode);
+            if (!student) return "Student not found.";
+            if (!course) return "Course not found.";
+            const result = student.registerCourse(course);
+            return result.msg;
+        }
+        dropStudentFromCourse(studentID, courseCode) {
+            const student = this.students.get(studentID);
+            const course = this.courses.get(courseCode);
+            if (!student || !course) return "Student or Course missing.";
+            const res = student.dropCourse(course);
+            return res.msg;
+        }
+        searchStudentByID(studentID) {
+            const s = this.students.get(studentID);
+            if (!s) return "❌ Student not found.";
+            return `${s.toString()}\n${s.viewRegisteredCourses()}\n📘 Total Credits: ${s.calculateTotalCredits()}`;
+        }
+        searchCourseByCode(code) {
+            const c = this.courses.get(code);
+            if (!c) return "Course not found.";
+            let waitListStr = c.waitingList.map(s => s.name).join(", ");
+            return `${c.toString()}\n📌 Waiting Students: ${waitListStr || "none"}`;
+        }
+        generateReports() {
+            let output = "===== 📈 REPORTS =====\n";
+            // most popular
+            let maxEnrolled = -1, popularCourse = null;
+            for(let c of this.courses.values()) {
+                if(c.enrolledStudents.length > maxEnrolled) {
+                    maxEnrolled = c.enrolledStudents.length;
+                    popularCourse = c;
+                }
+            }
+            if(popularCourse) output += `🏆 Most popular: ${popularCourse.courseName} (${popularCourse.courseCode}) with ${maxEnrolled} students.\n`;
+            else output += "No courses available.\n";
+            output += "\n📌 Full courses:\n";
+            let hasFull = false;
+            for(let c of this.courses.values()) {
+                if(c.isFull()) { output += `  🔴 ${c.toString()}\n`; hasFull=true; }
+            }
+            if(!hasFull) output += "  No full courses.\n";
+            output += `\n👥 Total students: ${this.students.size}\n📚 Total courses: ${this.courses.size}\n`;
+            return output;
+        }
+        // Persistence (localStorage simulation of text files)
+        saveToLocalStorage() {
+            const studentData = [];
+            for(let s of this.students.values()) {
+                studentData.push({name:s.name, nationalID:s.nationalID, studentID:s.studentID, major:s.major});
+            }
+            const courseData = [];
+            for(let c of this.courses.values()) {
+                courseData.push({code:c.courseCode, name:c.courseName, capacity:c.capacity});
+            }
+            const regData = [];
+            for(let c of this.courses.values()) {
+                for(let s of c.enrolledStudents) {
+                    regData.push({studentID:s.studentID, courseCode:c.courseCode, status:"enrolled"});
+                }
+                for(let s of c.waitingList) {
+                    regData.push({studentID:s.studentID, courseCode:c.courseCode, status:"waiting"});
+                }
+            }
+            localStorage.setItem("regSystem_students", JSON.stringify(studentData));
+            localStorage.setItem("regSystem_courses", JSON.stringify(courseData));
+            localStorage.setItem("regSystem_regs", JSON.stringify(regData));
+            return "💾 Data saved to browser storage (simulated text files).";
+        }
+        loadFromLocalStorage() {
+            const storedStudents = localStorage.getItem("regSystem_students");
+            const storedCourses = localStorage.getItem("regSystem_courses");
+            const storedRegs = localStorage.getItem("regSystem_regs");
+            if(storedStudents) {
+                const studentsArr = JSON.parse(storedStudents);
+                for(let data of studentsArr) {
+                    if(!this.students.has(data.studentID)) {
+                        let s = new Student(data.name, data.nationalID, data.studentID, data.major);
+                        this.students.set(data.studentID, s);
+                    }
+                }
+            }
+            if(storedCourses) {
+                const coursesArr = JSON.parse(storedCourses);
+                for(let data of coursesArr) {
+                    if(!this.courses.has(data.code)) {
+                        let c = new Course(data.code, data.name, data.capacity);
+                        this.courses.set(data.code, c);
+                    }
+                }
+            }
+            if(storedRegs && storedStudents && storedCourses) {
+                const regsArr = JSON.parse(storedRegs);
+                for(let reg of regsArr) {
+                    const student = this.students.get(reg.studentID);
+                    const course = this.courses.get(reg.courseCode);
+                    if(student && course) {
+                        if(reg.status === "enrolled" && !course.enrolledStudents.some(s=>s.studentID===student.studentID)) {
+                            course.enrolledStudents.push(student);
+                            if(!student.registeredCourses.some(crs=>crs.courseCode===course.courseCode))
+                                student.registeredCourses.push(course);
+                        } else if(reg.status === "waiting" && !course.waitingList.some(s=>s.studentID===student.studentID)) {
+                            course.waitingList.push(student);
+                        }
+                    }
+                }
+            }
+            return "📂 Data loaded from storage (students/courses/registrations).";
+        }
+    }
+
+    // ----------------------- UI CONTROLLER -----------------------
+    const system = new RegistrationSystem();
+    let currentPanelDiv = document.getElementById("dynamicPanel");
+
+    function renderContent(htmlContent) {
+        if(currentPanelDiv) currentPanelDiv.innerHTML = htmlContent;
+    }
+
+    function showMessage(msg, isError = false) {
+        renderContent(`
+            <div class="card">
+                <h3>📢 ${isError ? "Notice" : "System Message"}</h3>
+                <div class="report-area" style="background:${isError?'#fff0f0':'#eef9ff'}">${msg.replace(/\n/g,'<br>')}</div>
+                <button class="primary" onclick="location.reload()" style="margin-top:12px;">⟳ Back to Menu</button>
+            </div>
+        `);
+    }
+
+    function showInputForm(title, fields, onSubmitCallback) {
+        let inputsHtml = '';
+        fields.forEach(f => {
+            inputsHtml += `<label>${f.label}</label><input type="${f.type || 'text'}" id="${f.id}" placeholder="${f.placeholder}" style="width:100%; margin:8px 0; padding:8px;">`;
+        });
+        renderContent(`
+            <div class="card">
+                <h3>${title}</h3>
+                ${inputsHtml}
+                <div class="input-group">
+                    <button class="primary" id="submitFormBtn">✅ Submit</button>
+                    <button class="sub-btn" id="cancelFormBtn">Cancel</button>
+                </div>
+            </div>
+        `);
+        document.getElementById("submitFormBtn").onclick = () => {
+            const values = fields.map(f => document.getElementById(f.id).value);
+            const result = onSubmitCallback(...values);
+            showMessage(result);
+        };
+        document.getElementById("cancelFormBtn").onclick = () => { window.location.reload(); };
+    }
+
+    // Event listeners & dynamic menus
+    document.getElementById("studentMgmtBtn").onclick = () => {
+        const sub = document.getElementById("studentSubmenu");
+        sub.style.display = sub.style.display === "none" ? "flex" : "none";
+    };
+    document.getElementById("courseMgmtBtn").onclick = () => {
+        const sub = document.getElementById("courseSubmenu");
+        sub.style.display = sub.style.display === "none" ? "flex" : "none";
+    };
+    document.getElementById("regMgmtBtn").onclick = () => {
+        const sub = document.getElementById("regSubmenu");
+        sub.style.display = sub.style.display === "none" ? "flex" : "none";
+    };
+    document.getElementById("searchBtn").onclick = () => {
+        const sub = document.getElementById("searchSubmenu");
+        sub.style.display = sub.style.display === "none" ? "flex" : "none";
+    };
+
+    // actions via data-action
+    document.querySelectorAll("[data-action]").forEach(btn => {
+        btn.onclick = () => {
+            const action = btn.getAttribute("data-action");
+            if (action === "addStudent") {
+                showInputForm("➕ Add New Student", [
+                    {label:"Full Name (Arabic support)", id:"name", placeholder:"أحمد محمد"},
+                    {label:"National ID (digits)", id:"natId", placeholder:"1234567890"},
+                    {label:"Student ID", id:"stuId", placeholder:"2024001"},
+                    {label:"Major", id:"major", placeholder:"Computer Science"}
+                ], (name, natId, stuId, major) => system.addStudent(name, natId, stuId, major));
+            }
+            else if(action === "deleteStudent") {
+                showInputForm("🗑️ Delete Student", [{label:"Student ID", id:"sid", placeholder:"F2400027"}], (sid) => system.deleteStudent(sid));
+            }
+            else if(action === "editStudent") {
+                showInputForm("✏️ Edit Student", [
+                    {label:"Student ID", id:"sid", placeholder:"ID"},
+                    {label:"Field to edit (name, major, nationalID)", id:"field", placeholder:"name"},
+                    {label:"New value", id:"newval", placeholder:"New text"}
+                ], (sid, field, newval) => system.editStudent(sid, field, newval));
+            }
+            else if(action === "addCourse") {
+                showInputForm("📖 Add Course", [
+                    {label:"Course Code", id:"code", placeholder:"CS201"},
+                    {label:"Course Title (Arabic)", id:"title", placeholder:"برمجة كائنية"},
+                    {label:"Capacity", id:"cap", placeholder:"30", type:"number"}
+                ], (code, title, cap) => system.addCourse(code, title, parseInt(cap)));
+            }
+            else if(action === "deleteCourse") {
+                showInputForm("Delete Course", [{label:"Course Code", id:"code", placeholder:"CS201"}], (code) => system.deleteCourse(code));
+            }
+            else if(action === "editCourse") {
+                showInputForm("Edit Course", [
+                    {label:"Course Code", id:"code"},
+                    {label:"Field (name / capacity)", id:"field"},
+                    {label:"New Value", id:"newval"}
+                ], (code, field, newval) => system.editCourse(code, field, newval));
+            }
+            else if(action === "registerCourse") {
+                showInputForm("📝 Register Student → Course", [
+                    {label:"Student ID", id:"sid"},
+                    {label:"Course Code", id:"ccode"}
+                ], (sid, ccode) => system.registerStudentToCourse(sid, ccode));
+            }
+            else if(action === "dropCourse") {
+                showInputForm("❌ Drop Course", [
+                    {label:"Student ID", id:"sid"},
+                    {label:"Course Code", id:"ccode"}
+                ], (sid, ccode) => system.dropStudentFromCourse(sid, ccode));
+            }
+            else if(action === "searchStudent") {
+                showInputForm("🔎 Search Student", [{label:"Student ID", id:"sid"}], (sid) => system.searchStudentByID(sid));
+            }
+            else if(action === "searchCourse") {
+                showInputForm("🔎 Search Course", [{label:"Course Code", id:"ccode"}], (ccode) => system.searchCourseByCode(ccode));
+            }
+        };
+    });
+
+    document.getElementById("reportsBtn").onclick = () => {
+        const report = system.generateReports();
+        renderContent(`<div class="card"><h3>📊 Reports</h3><pre class="report-area">${report}</pre></div>`);
+    };
+    document.getElementById("saveBtn").onclick = () => {
+        const msg = system.saveToLocalStorage();
+        showMessage(msg);
+    };
+    document.getElementById("quitBtn").onclick = () => {
+        system.saveToLocalStorage();
+        showMessage("✅ Data saved. Goodbye! (Refresh to restart)");
+    };
+    document.getElementById("helpBtn").onclick = () => {
+        renderContent(`<div class="card"><h3>📘 Help</h3><div class="report-area">📌 Smart Registration System<br>- HashMaps for fast lookup (students/courses)<br>- ArrayLists for enrolled lists & registered courses<br>- FIFO Queue for waiting lists (auto enrollment when seat frees)<br>- Arabic names fully supported (UTF-8)<br>- Data persists via localStorage (simulates text files).<br>Use menu to manage everything.</div></div>`);
+    };
+
+    // initial load
+    window.onload = () => {
+        const loadMsg = system.loadFromLocalStorage();
+        renderContent(`<div class="card"><h3>📂 System Ready</h3><div class="report-area">${loadMsg}<br>✅ Ready to manage students & courses with waiting list queue.</div></div>`);
+    };
+</script>
+</body>
+</html>
